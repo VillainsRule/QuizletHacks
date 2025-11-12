@@ -1,5 +1,5 @@
-// this script lets you solve the match AND APPEAR ON THE LEADERBOARD
-// in a time that YOU get to select (it could even be 2 seconds)
+// this script automatically solves the match and puts you on the leaderboard
+// with a time that YOU get to select (it could even be 1 second)
 
 (() => {
     const encodeData = (data) => {
@@ -14,7 +14,16 @@
         return encodedParts.join("-");
     }
 
-    let num = Number(prompt('what do you want your match time to be? enter in the format "5.1":').replaceAll('.', ''));
+    const convertScore = (s) => {
+        if (s.includes(".")) return parseInt(s.replace(".", ""), 10);
+        return parseInt(s + "0", 10);
+    };
+
+    let inputNum = prompt('what do you want your match time to be? enter in the format "5.1":');
+    if (isNaN(inputNum)) alert('uhh might be wrong but that doesn\'t look very numberlike');
+    if (inputNum.includes('.') && ((inputNum.indexOf('.') + 2) !== inputNum.length)) alert('scores cannot have more than one decimal place');
+
+    const num = convertScore(inputNum);
 
     let data = encodeData({
         previous_record: 0,
@@ -36,5 +45,7 @@
         },
         body: JSON.stringify({ data }),
         method: 'POST'
+    }).then(r => {
+        if (!r.ok) alert('they might\'ve fixed the cheat, open an issue @ https://github.com/VillainsRule/QuizletHacks');
     });
 })();
