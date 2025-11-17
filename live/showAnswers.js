@@ -1,42 +1,21 @@
 (() => setInterval(() => {
-    function findByKey(object, key, seen = new Set(), path = '') {
-        if (seen.has(object)) return undefined;
-        seen.add(object);
+    const target = document.querySelector('[data-testid="normalPrompt"]')?.parentElement;
+    if (!target) return;
+    const targetFiber = target[Object.keys(target).find(e => e.startsWith('__reactFiber$'))];
+    const stateNode = targetFiber.child.pendingProps;
+    const cardSides = stateNode.currentQuestion.cardSides.map(e => e.media[0]);
+    const questionType = stateNode.options.answerWith;
 
-        for (let k of Object.keys(object)) {
-            let newPath = path ? `${path}.${k}` : k;
+    const side1 = cardSides[0].plainText;
+    const side2 = cardSides[1].plainText;
 
-            if (k === key) {
-                return object[k];
-            }
-
-            if (object[k] && typeof object[k] === 'object') {
-                let result = findByKey(object[k], key, seen, newPath);
-                if (result !== undefined) return result;
-            }
-        }
-
-        return undefined;
-    }
-
-    let currentQuestion = findByKey(document.querySelector('[data-testid="normalPrompt"]'), 'currentQuestion');
-    if (!currentQuestion) return;
-
-    let term = currentQuestion.cardSides[0].media[0].plainText;
-    let def = currentQuestion.cardSides[1].media[0].plainText;
-
-    let termElement = document.querySelector('.FormattedText.notranslate.lang-en');
-    let defIs = termElement.innerText == term;
+    const side1IsQuestion = questionType === 'definition';
+    const answerText = side1IsQuestion ? side2 : side1;
 
     let answerOpts = document.querySelector('div[data-testid="normalPrompt"]').parentElement.children[1];
 
-    let answerCard = [...answerOpts.children].find((opt) => opt.children[0].innerText == def);
+    let answerCard = [...answerOpts.children].find((opt) => opt.children[0].innerText === answerText);
     let wrongCards = [...answerOpts.children].filter(a => a !== answerCard);
-
-    if (wrongCards.length == 4) {
-        answerCard = [...answerOpts.children].find((opt) => opt.children[0].innerText == term);
-        wrongCards = [...answerOpts.children].filter(a => a !== answerCard);
-    }
 
     if (answerCard) answerCard.style.color = 'lime';
     wrongCards.forEach((card) => card.style.color = 'red');
