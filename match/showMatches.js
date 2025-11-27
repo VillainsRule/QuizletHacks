@@ -24,8 +24,10 @@
         let colorIndex = 0;
 
         for (let i = 0; i < 12; i++) {
-            let text = document.querySelectorAll('.FormattedText')[i].innerText;
-            if (blacklist.includes(text)) continue;
+            let node = document.querySelectorAll('.FormattedText')[i];
+            if (blacklist.includes(node)) continue;
+
+            let text = node.innerText;
 
             let needStartsWith = text.endsWith('…');
 
