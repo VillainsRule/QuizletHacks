@@ -1,18 +1,12 @@
-// works 90% of the time, use solveInTime for a 100% working version
-// if it doesn't show the correct matches, reload the tab and paste in the script again
-
 (() => {
-    const hack = () => {
-        if (document.querySelectorAll('.FormattedText').length != 12) return setTimeout(hack, 50);
+    let fn = () => {
+        const cardContainer = document.querySelector('#__next > :nth-child(2) > :nth-child(2)');
+        const fiberName = Object.keys(cardContainer).find(c => c.startsWith('__reactFiber$'));
+        const fiber = cardContainer[fiberName];
+        const opts = fiber.return?.return?.return?.memoizedProps?.matchingQuestions?.options;
+        if (!opts) return setTimeout(fn, 10);
 
-        let setData = JSON.parse(__NEXT_DATA__.props.pageProps.dehydratedReduxStateKey);
-        let cards = setData.studyModesCommon.studiableData.studiableItems;
-
-        let blacklist = [];
-
-        let find = (ig) => [...document.querySelectorAll('.FormattedText')].find((i) => ig.startsWith(i.innerText.replace('…', '')));
-
-        const colors = [
+        const RANDOM_COLORS = [
             '#FF007F',
             '#FFAA1D',
             '#FFF000',
@@ -21,42 +15,35 @@
             '#1974D2'
         ];
 
-        let colorIndex = 0;
+        const setData = JSON.parse(__NEXT_DATA__.props.pageProps.dehydratedReduxStateKey);
+        const cards = setData.studyModesCommon.studiableData.studiableItems.map(c => c.cardSides);
 
-        for (let i = 0; i < 12; i++) {
-            let node = document.querySelectorAll('.FormattedText')[i];
-            if (blacklist.includes(node)) continue;
+        const cardParents = [...cardContainer.children].map(e => [...[...e.children][0].children]).flat(1);
 
-            let text = node.innerText;
+        const knownIndexes = new Set();
 
-            let needStartsWith = text.endsWith('…');
+        opts.map(({ attributes }, i) => {
+            const isText = attributes[1].type === 'AudioAttribute';
+            const theCard = cards.findIndex((card) => {
+                if (isText) return card.some(side => side.media[0].plainText === attributes[0].plainText);
+                return card.some(side => side.media[1]?.url === attributes[1].url);
+            });
 
-            let card = cards.find((card) => card.cardSides.some((side) => {
-                if (needStartsWith) return side.media[0].plainText.startsWith(text.replace('…', ''))
-                else return side.media[0].plainText == text
-            }));
+            const parent = cardParents[i];
+            parent.setAttribute('data-cardIndex', theCard);
+            parent.setAttribute('data-isCard', 'true');
 
-            let termSide = card.cardSides.find((side) => side.label == 'word');
-            let definSide = card.cardSides.find((side) => side.label == 'definition');
+            knownIndexes.add(theCard);
+        });
 
-            let term = termSide.media[0].plainText;
-            let defin = definSide.media[0].plainText;
+        [...knownIndexes].map((index, i) => {
+            const matchingCards = cardParents.filter(c => parseInt(c.getAttribute('data-cardIndex')) === index);
+            if (matchingCards.length !== 2) console.warn('could not find matching cards for index', index);
 
-            let isTerm = term == text;
-            let isDef = defin == text;
+            const color = RANDOM_COLORS[i];
+            matchingCards.forEach(card => card.style.border = `3px solid ${color}`);
+        });
+    };
 
-            find(term).style.border = `2px solid ${colors[colorIndex]}`;
-            find(defin).style.border = `2px solid ${colors[colorIndex]}`;
-
-            find(term).style.borderRadius = '15px';
-            find(defin).style.borderRadius = '15px';
-
-            colorIndex++;
-
-            if (isTerm) blacklist.push(defin);
-            else if (isDef) blacklist.push(term);
-        }
-    }
-
-    hack();
+    fn();
 })();
