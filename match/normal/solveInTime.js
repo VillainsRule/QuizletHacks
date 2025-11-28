@@ -11,12 +11,12 @@
             encodedParts.push(modifiedCharCode);
         }
 
-        return encodedParts.join("-");
+        return encodedParts.join('-');
     }
 
     const convertScore = (s) => {
-        if (s.includes(".")) return parseInt(s.replace(".", ""), 10);
-        return parseInt(s + "0", 10);
+        if (s.includes('.')) return parseInt(s.replace('.', ''), 10);
+        return parseInt(s + '0', 10);
     };
 
     let inputNum = prompt('what do you want your match time to be? enter in the format "5.1":');
