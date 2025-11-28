@@ -1,6 +1,7 @@
 (() => setInterval(() => {
     const target = document.querySelector('[data-testid="normalPrompt"]')?.parentElement;
     if (!target) return;
+
     const targetFiber = target[Object.keys(target).find(e => e.startsWith('__reactFiber$'))];
     const stateNode = targetFiber.child.pendingProps;
     const cardSides = stateNode.currentQuestion.cardSides.map(e => e.media);
