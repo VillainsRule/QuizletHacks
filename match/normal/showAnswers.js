@@ -4,7 +4,7 @@
         const fiberName = Object.keys(cardContainer).find(c => c.startsWith('__reactFiber$'));
         const fiber = cardContainer[fiberName];
         const opts = fiber.return?.return?.return?.memoizedProps?.matchingQuestions?.options;
-        if (!opts) return setTimeout(fn, 10);
+        if (!opts) return setTimeout(fn, 30);
 
         const RANDOM_COLORS = [
             '#FF007F',
