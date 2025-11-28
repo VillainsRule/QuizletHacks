@@ -3,10 +3,10 @@
     if (!parent) return;
 
     const customElements = [...parent.children].filter(e => e.tagName === 'DIV');
-    
+
     const wrapper = document.querySelector('#__next > :nth-child(3) > :nth-child(2)');
     if (!wrapper) return;
-    
+
     const fiber = wrapper[Object.keys(wrapper).find(k => k.startsWith('__reactFiber$'))];
     const props = fiber.return.return.return.memoizedProps.children[0].props;
     if (!props.currentQuestion) return;
