@@ -2,6 +2,7 @@
 a few quizlet hacks to make you "cooler" than you already are!!
 
 pick a folder:
+- [blast](https://github.com/VillainsRule/QuizletHacks/tree/master/blast)
 - [blocks](https://github.com/VillainsRule/QuizletHacks/tree/master/blocks)
 - [live](https://github.com/VillainsRule/QuizletHacks/tree/master/live)
 - [match](https://github.com/VillainsRule/QuizletHacks/tree/master/match/normal)
