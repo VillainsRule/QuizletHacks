@@ -1,3 +1,8 @@
+> [!NOTE]
+> this repository is no longer maintained, as i don't use quizlet anymore. it was a nice run!
+
+<br><br><hr><br><br>
+
 ## quizlethacks
 a few quizlet hacks to make you "cooler" than you already are!!
 
@@ -9,6 +14,3 @@ pick a folder:
 - [match (multiplayer)](https://github.com/VillainsRule/QuizletHacks/tree/master/match/multiplayer)
 
 then pick a hack and put it in the browser console!
-
-> [!NOTE]
-> i no longer have any classes that require these, so if there is an issue, i will never find out myself. open an [issue](https://github.com/VillainsRule/QuizletHacks/issues) if this is the case.
